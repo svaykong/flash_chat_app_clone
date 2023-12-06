@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../utils/util.dart';
+
 class HomeScreen extends StatelessWidget {
   static const id = 'home_screen';
 
@@ -35,28 +37,14 @@ class HomeScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   Get.defaultDialog(
-                    titleStyle: const TextStyle(
-                      color: Colors.white,
-                    ),
                     title: 'Notice',
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'This is a default dialog notice!',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
+                    titleStyle: kCommonTextStyle,
+                    middleText: 'This is a default dialog notice!',
+                    middleTextStyle: kCommonTextStyle,
+                    textConfirm: 'OK',
+                    confirmTextColor: Theme.of(context).colorScheme.background,
+                    buttonColor: Colors.white,
+                    onConfirm: () => Get.back(),
                   );
                 },
                 child: const Text('Display default dialog'),
