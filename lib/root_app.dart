@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
+
 import 'screens/export_screen.dart';
 
 class RootApp extends StatelessWidget {
@@ -7,7 +9,7 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -18,9 +20,9 @@ class RootApp extends StatelessWidget {
         WelcomeScreen.id: (_) => const WelcomeScreen(),
         LoginScreen.id: (_) => const LoginScreen(),
         RegisterScreen.id: (_) => const RegisterScreen(),
+        ChatScreen.id: (_) => const ChatScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
   }
 }
- 

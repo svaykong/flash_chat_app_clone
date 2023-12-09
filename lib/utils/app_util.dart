@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const Color primaryColor = Colors.blue;
+const Color primaryColor = Colors.blueAccent;
 const Color secondaryColor = Colors.lightBlueAccent;
 const Color thirdColor = Colors.white;
 
@@ -38,4 +38,22 @@ const kTextFieldDecoration = InputDecoration(
     vertical: 10.0,
     horizontal: 20.0,
   ),
+);
+
+const kMessageContainerDecoration = BoxDecoration(
+  border: Border(
+    top: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+  ),
+);
+
+const kSendButtonTextStyle = TextStyle(
+  color: Colors.lightBlueAccent,
+  fontWeight: FontWeight.bold,
+  fontSize: 18.0,
+);
+
+const kMessageTextFieldDecoration = InputDecoration(
+  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+  hintText: 'Type your message here...',
+  border: InputBorder.none,
 );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:gap/gap.dart';
 
-import '../app_util.dart';
+import '../utils/app_util.dart';
 import '../screens/export_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
