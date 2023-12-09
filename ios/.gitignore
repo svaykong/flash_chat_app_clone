@@ -32,3 +32,15 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# ignore GoogleService-Info.plist
+Runner/GoogleService-Info.plist
+
+# ignore Podfile
+Podfile
+
+# ignore Podfile.lock
+Podfile.lock
+
+# ignore firebase_app_id_file.json
+firebase_app_id_file.json
