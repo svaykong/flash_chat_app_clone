@@ -17,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _authController = Get.find<AuthController>();
   final _loginFormKey = GlobalKey<FormState>();
   String _email = 'johndoe@gmail.com';
   String _password = 'johnqwer';
@@ -137,6 +138,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                   }),
+              Obx(() {
+                print('${_authController.isLoading}');
+                print('${_authController.errorMsg}');
+                return Text(_authController.errorMsg.string);
+              }),
             ],
           ),
         ),
