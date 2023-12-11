@@ -35,8 +35,8 @@ class WelcomeScreen extends StatelessWidget {
                   animatedTexts: [
                     TypewriterAnimatedText(
                       'Flash Chat',
-                      textStyle: const TextStyle(
-                        fontSize: 45.0,
+                      textStyle: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width * 0.11, //ios: 45.0 aos: 35.0
                         fontWeight: FontWeight.w900,
                       ),
                       speed: const Duration(milliseconds: 130),

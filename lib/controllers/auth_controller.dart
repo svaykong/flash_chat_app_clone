@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class AuthController extends GetxController {
   late final FirebaseAuth _auth;
   RxString errorMsg = ''.obs;
-  bool isLoading = false;
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
@@ -52,6 +52,7 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     try {
+      await Future.delayed(const Duration(seconds: 1), () {});
       await _auth.signOut();
       errorMsg = ''.obs;
     } catch (e) {
@@ -62,7 +63,7 @@ class AuthController extends GetxController {
   User? get getCurrentUser => _auth.currentUser;
 
   void _updateLoading(bool currentStatus) {
-    isLoading = currentStatus;
+    isLoading = currentStatus.obs;
     update();
   }
 }
