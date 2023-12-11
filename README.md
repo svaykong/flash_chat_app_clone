@@ -9,3 +9,7 @@
 ## Firebase Rule
 - https://stackoverflow.com/questions/54479483/get-error-firestore-the-caller-does-not-have-permission-to-execute-the-specif
 
+'''firebase
+# deploy firebase firestore rules,... 
+firebase deploy --only firestore
+'''
