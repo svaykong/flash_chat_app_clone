@@ -40,19 +40,22 @@ const kTextFieldDecoration = InputDecoration(
   ),
 );
 
-const kMessageContainerDecoration = BoxDecoration(
-  border: Border(
-    top: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+final kMessageContainerDecoration = BoxDecoration(
+  color: Colors.blueGrey[800],
+  border: const Border(
+    top: BorderSide(color: thirdColor, width: 0.2),
   ),
 );
 
-const kSendButtonTextStyle = TextStyle(
-  color: Colors.lightBlueAccent,
-  fontWeight: FontWeight.bold,
+final kSendButtonTextStyle = TextStyle(
+  color: Colors.blueGrey[900],
   fontSize: 18.0,
 );
 
 const kMessageTextFieldDecoration = InputDecoration(
+  hintStyle: TextStyle(
+    color: thirdColor,
+  ),
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
   hintText: 'Type your message here...',
   border: InputBorder.none,

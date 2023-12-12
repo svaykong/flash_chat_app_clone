@@ -67,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
             color: thirdColor,
           ),
         ),
-        backgroundColor: secondaryColor,
+        backgroundColor: Colors.blueGrey[800],
       ),
       body: ModalProgressHUD(
         inAsyncCall: _isLoading,
@@ -93,9 +93,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                 _messageText = value;
                               },
                               decoration: kMessageTextFieldDecoration,
+                              style: const TextStyle(
+                                color: thirdColor
+                              ),
+                              autocorrect: false,
+                              autofocus: false,
                             ),
                           ),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: thirdColor
+                            ),
                             onPressed: () {
                               _messageTextController.clear();
                               String? email = _loggedInUser!.email;
@@ -106,7 +114,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               // getting collection ID from cloud firestore
                               _firestoreController.sendMessage(messageText: _messageText, email: email);
                             },
-                            child: const Text(
+                            child: Text(
                               'Send',
                               style: kSendButtonTextStyle,
                             ),
