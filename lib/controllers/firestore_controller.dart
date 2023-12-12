@@ -28,4 +28,8 @@ class FirestoreController extends GetxController {
   Stream<QuerySnapshot<Map<String, dynamic>>> messageStream() {
     return _firestore.collection('messages').snapshots();
   }
+
+  Future<void> editMessage({required String docID, required String updateMessage}) async {
+    await _firestore.collection('messages').doc(docID).update({"message": updateMessage});
+  }
 }

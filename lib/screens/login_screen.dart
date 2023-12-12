@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:modal_progress_hud_alt/modal_progress_hud_alt.dart';
 
 import '../utils/app_util.dart';
-import 'chat_screen.dart';
+import 'chat/chat_screen.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
