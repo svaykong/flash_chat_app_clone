@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 import '../../utils/app_util.dart';
 import '../../controllers/firestore_controller.dart';
+import '../../utils/logger.dart';
 import 'message_bubble.dart';
 
-class MessagesStream extends StatefulWidget {
+class MessagesStream extends StatelessWidget {
   const MessagesStream({
     Key? key,
     required this.loggedInUser,
   }) : super(key: key);
   final User loggedInUser;
 
-  @override
-  State<MessagesStream> createState() => _MessagesStreamState();
-}
-
-class _MessagesStreamState extends State<MessagesStream> {
   @override
   Widget build(BuildContext context) {
     final firestoreController = Get.find<FirestoreController>();
@@ -43,36 +38,68 @@ class _MessagesStreamState extends State<MessagesStream> {
           final messages = snapshot.data!.docs;
           List<MessageBubble> messageBubbles = [];
           for (var message in messages) {
-            final messageText = message.data()["text"];
-            final messageSender = message.data()["sender"];
-            final isMe = widget.loggedInUser.email == messageSender;
+            final String messageText = message.data()["text"];
+            final String messageSender = message.data()["sender"];
+            final isMe = loggedInUser.email == messageSender;
             final messageBubble = MessageBubble(
               text: messageText,
               sender: messageSender,
               isMe: isMe,
               onTap: () async {
-                if (isMe) {
-                  await showDialog<void>(
-                      barrierDismissible: true,
-                      context: context,
-                      builder: (_) {
-                        return const Row(
-                          children: [
-                            Icon(
+                await showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      title: const Text('Do you want to change?'),
+                      content: Wrap(
+                        runAlignment: WrapAlignment.center,
+                        alignment: WrapAlignment.center,
+                        spacing: 10.0,
+                        children: [
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueGrey[800],
+                            ),
+                            onPressed: isMe ? () {
+                              'current message: $messageText'.log();
+
+                              // firestoreController.editMessage(docID: docID, updateMessage: updateMessage);
+                            } : null,
+                            icon: const Icon(
                               Icons.edit,
                               color: thirdColor,
                             ),
-                            Gap(10.0),
-                            Text(
-                              'Edit',
+                            label: const Text(
+                              'Change',
                               style: TextStyle(
                                 color: thirdColor,
                               ),
                             ),
-                          ],
-                        );
-                      });
-                }
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: thirdColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
               },
             );
             messageBubbles.add(messageBubble);
