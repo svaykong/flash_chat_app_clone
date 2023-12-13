@@ -9,22 +9,16 @@ class MessageBubble extends StatelessWidget {
     required this.text,
     required this.isMe,
     required this.onTap,
-    // required this.getTapPosition,
   });
 
   final String sender;
   final String text;
   final bool isMe;
   final VoidCallback onTap;
-  // final ValueChanged<TapDownDetails> getTapPosition;
 
   @override
   Widget build(BuildContext context) {
-    String name = sender.substring(0, sender.indexOf('@'));
-    name = name[0].toUpperCase() + name.substring(1, name.length);
     return GestureDetector(
-      // get tap location
-      // onTapDown: (details) => getTapPosition(details),
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -44,8 +38,7 @@ class MessageBubble extends StatelessWidget {
           color: Colors.blueGrey[800],
           child: Container(
             alignment: Alignment.centerLeft,
-            width: Get.width * 0.4,
-            height: isMe ? 48 : 70,
+            width: _getWidth(),
             padding: const EdgeInsets.symmetric(
               vertical: 10.0,
               horizontal: 20.0,
@@ -56,7 +49,7 @@ class MessageBubble extends StatelessWidget {
                 isMe
                     ? const SizedBox.shrink()
                     : Text(
-                        name,
+                        _getName,
                         style: const TextStyle(
                           fontSize: 16.0,
                           color: Colors.green,
@@ -75,5 +68,33 @@ class MessageBubble extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String get _getName {
+    String name = sender.substring(0, sender.indexOf('@'));
+    name = name[0].toUpperCase() + name.substring(1, name.length);
+    return name;
+  }
+
+  double _getWidth() {
+    double result = Get.width;
+    final divided = result / text.length;
+    if (divided <= 13) {
+      result = Get.width * 0.7;
+    } else {
+      if (text.length <= 5) {
+        result = Get.width * 0.3;
+      } else if (text.length > 5 && text.length < 9) {
+        result = Get.width * 0.4;
+      } else if (text.length == 9) {
+        result = Get.width * 0.45;
+      } else if (text.length >= 10 && text.length <= 15) {
+        result = Get.width * 0.5;
+      } else {
+        result = Get.width * 0.6;
+      }
+    }
+
+    return result;
   }
 }
