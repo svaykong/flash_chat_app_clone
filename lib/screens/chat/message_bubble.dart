@@ -71,6 +71,7 @@ class MessageBubble extends StatelessWidget {
   }
 
   String get _getName {
+    if (sender.isEmpty) return "";
     String name = sender.substring(0, sender.indexOf('@'));
     name = name[0].toUpperCase() + name.substring(1, name.length);
     return name;
@@ -91,7 +92,7 @@ class MessageBubble extends StatelessWidget {
       } else if (text.length >= 10 && text.length <= 15) {
         result = Get.width * 0.5;
       } else {
-        result = Get.width * 0.6;
+        result = Get.width * 0.7;
       }
     }
 

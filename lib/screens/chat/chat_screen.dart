@@ -1,3 +1,4 @@
+import 'package:flask_chat_app_clone/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,17 +21,33 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _messageTextController = TextEditingController();
-  final _firestoreController = Get.find<FirestoreController>();
+  late final FirestoreController _firestoreController;
+  late final AuthController _authController;
+
+  // Define the focus node. To manage the lifecycle, create the FocusNode in
+  // the initState method, and clean it up in the dispose method.
+  late FocusNode _myFocusNode;
+  late final TextEditingController _messageTextController;
   User? _loggedInUser;
-  final _authController = Get.find<AuthController>();
   String _messageText = '';
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _firestoreController = Get.find<FirestoreController>();
+    _authController = Get.find<AuthController>();
+    _myFocusNode = FocusNode();
+    _messageTextController = TextEditingController();
     _loggedInUser = _authController.getCurrentUser;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    _myFocusNode.dispose();
+    _messageTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -73,7 +90,9 @@ class _ChatScreenState extends State<ChatScreen> {
         inAsyncCall: _isLoading,
         child: SafeArea(
           child: _loggedInUser == null
-              ? const Center(child: Text("Could not verify user"))
+              ? const Center(
+                  child: Text("Could not verify user"),
+                )
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,33 +105,56 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: _messageTextController,
-                              onChanged: (value) {
-                                _messageText = value;
-                              },
-                              decoration: kMessageTextFieldDecoration,
-                              style: const TextStyle(
-                                color: thirdColor
-                              ),
-                              autocorrect: false,
-                              autofocus: false,
-                            ),
-                          ),
+                          GetBuilder(
+                              init: _firestoreController,
+                              builder: (fireStoreCtr) {
+                                if (fireStoreCtr.updateMessage.isNotEmpty) {
+                                  _messageText = fireStoreCtr.updateMessage.value;
+                                  _messageTextController.text = _messageText;
+
+                                  // When click change button
+                                  // give focus to the text field using myFocusNode.
+                                  _myFocusNode.requestFocus();
+                                }
+                                return Expanded(
+                                  child: TextField(
+                                    focusNode: _myFocusNode,
+                                    controller: _messageTextController,
+                                    onChanged: (value) {
+                                      _messageText = value;
+                                    },
+                                    decoration: kMessageTextFieldDecoration,
+                                    style: const TextStyle(color: thirdColor),
+                                    autocorrect: false,
+                                    autofocus: false,
+                                  ),
+                                );
+                              }),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: thirdColor
-                            ),
-                            onPressed: () {
+                            style: ElevatedButton.styleFrom(backgroundColor: thirdColor),
+                            onPressed: () async {
                               _messageTextController.clear();
                               String? email = _loggedInUser!.email;
                               if (email == null) {
                                 Get.snackbar("Email Error", "Email is null");
                                 return;
                               }
-                              // getting collection ID from cloud firestore
-                              _firestoreController.sendMessage(messageText: _messageText, email: email);
+                              if (_firestoreController.isUpdate.value) {
+                                final msgID = _firestoreController.messageID.value;
+                                _firestoreController.clearUpdateMessage();
+                                await _firestoreController.editMessage(msgID: msgID, updatedMsg: _messageText);
+                              } else {
+                                if (_messageText.isEmpty) {
+                                  return;
+                                }
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                _firestoreController.sendMessage(messageText: _messageText, email: email);
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
                             },
                             child: Text(
                               'Send',
