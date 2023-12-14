@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 class AuthController extends GetxController {
   late final FirebaseAuth _auth;
   RxString errorMsg = ''.obs;
-  RxBool isLoading = false.obs;
+
+  // Loading (checking status)
+  RxBool _isLoading = false.obs;
+  RxBool get isLoading => _isLoading;
 
   @override
   void onInit() {
@@ -12,10 +15,7 @@ class AuthController extends GetxController {
     _auth = FirebaseAuth.instance;
   }
 
-  Future<void> register({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> register({required String email, required String password}) async {
     try {
       _updateLoading(true);
       final userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -31,12 +31,10 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     try {
       _updateLoading(true);
+      await Future.delayed(const Duration(seconds: 1), () {});
       final userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
         errorMsg = ''.obs;
@@ -52,18 +50,21 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     try {
+      _updateLoading(true);
       await Future.delayed(const Duration(seconds: 1), () {});
       await _auth.signOut();
       errorMsg = ''.obs;
     } catch (e) {
       errorMsg = e.toString().obs;
+    } finally {
+      _updateLoading(false);
     }
   }
 
   User? get getCurrentUser => _auth.currentUser;
 
   void _updateLoading(bool currentStatus) {
-    isLoading = currentStatus.obs;
+    _isLoading = currentStatus.obs;
     update();
   }
 }

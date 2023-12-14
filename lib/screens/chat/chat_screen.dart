@@ -1,4 +1,3 @@
-import 'package:flask_chat_app_clone/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,8 +6,8 @@ import 'package:modal_progress_hud_alt/modal_progress_hud_alt.dart';
 
 import '../../controllers/firestore_controller.dart';
 import '../../controllers/auth_controller.dart';
-import '../welcome_screen.dart';
 import '../../utils/app_util.dart';
+import '../welcome_screen.dart';
 import 'message_stream.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -30,7 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
   late final TextEditingController _messageTextController;
   User? _loggedInUser;
   String _messageText = '';
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -40,14 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
     _myFocusNode = FocusNode();
     _messageTextController = TextEditingController();
     _loggedInUser = _authController.getCurrentUser;
-  }
-
-  @override
-  void dispose() {
-    // Clean up the focus node when the Form is disposed.
-    _myFocusNode.dispose();
-    _messageTextController.dispose();
-    super.dispose();
   }
 
   @override
@@ -62,13 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: thirdColor,
               ),
               onPressed: () async {
-                setState(() {
-                  _isLoading = true;
-                });
                 await _authController.logout();
-                setState(() {
-                  _isLoading = false;
-                });
                 if (_authController.errorMsg.isNotEmpty) {
                   Get.snackbar('Unknown Error', 'Logout failed');
                 } else {
@@ -87,7 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.blueGrey[800],
       ),
       body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
+        inAsyncCall: _authController.isLoading.value ? _authController.isLoading.value : _firestoreController.isLoading.value,
         child: SafeArea(
           child: _loggedInUser == null
               ? const Center(
@@ -147,13 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 if (_messageText.isEmpty) {
                                   return;
                                 }
-                                setState(() {
-                                  _isLoading = true;
-                                });
                                 _firestoreController.sendMessage(messageText: _messageText, email: email);
-                                setState(() {
-                                  _isLoading = false;
-                                });
                               }
                             },
                             child: Text(
@@ -169,5 +147,13 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    _myFocusNode.dispose();
+    _messageTextController.dispose();
+    super.dispose();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:get/get.dart';
 
 import '../utils/logger.dart';
@@ -9,6 +8,11 @@ class FirestoreController extends GetxController {
   RxString updateMessage = ''.obs;
   RxString messageID = ''.obs;
   RxBool isUpdate = false.obs;
+
+  // Loading (checking status)
+  RxBool _isLoading = false.obs;
+
+  RxBool get isLoading => _isLoading;
 
   @override
   void onInit() {
@@ -52,6 +56,8 @@ class FirestoreController extends GetxController {
 
   Future<void> editMessage({required String msgID, required String updatedMsg}) async {
     try {
+      _updateLoading(true);
+      await Future.delayed(const Duration(seconds: 2), () {});
       'updatedMsg: $updatedMsg'.log();
       await _firestore.collection('messages').doc(msgID).update({
         "text": updatedMsg,
@@ -59,7 +65,7 @@ class FirestoreController extends GetxController {
     } catch (e) {
       'editMessage err: $e'.log();
     } finally {
-      update();
+      _updateLoading(false);
     }
   }
 
@@ -78,6 +84,11 @@ class FirestoreController extends GetxController {
     updateMessage = ''.obs;
     messageID = ''.obs;
     isUpdate = false.obs;
+    update();
+  }
+
+  void _updateLoading(bool currentStatus) {
+    _isLoading = currentStatus.obs;
     update();
   }
 }

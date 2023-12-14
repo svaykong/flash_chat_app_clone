@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:modal_progress_hud_alt/modal_progress_hud_alt.dart';
 
 import '../utils/app_util.dart';
-import 'chat/chat_screen.dart';
 import '../controllers/auth_controller.dart';
+import 'chat/chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -20,17 +20,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _authController = Get.find<AuthController>();
   final _loginFormKey = GlobalKey<FormState>();
-  String _email = 'johndoe@gmail.com';
-  String _password = 'johnqwer';
+  String _email = 'johndoe@gmail.com'; //test@gmail.com
+  String _password = 'johnqwer'; //test123
   bool _secured = true;
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
+        inAsyncCall: _authController.isLoading.value,
         child: Form(
           key: _loginFormKey,
           child: Padding(
@@ -92,7 +91,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           _secured = !_secured;
                         });
                       },
-                      icon: Icon(_secured ? Icons.visibility : Icons.visibility_off),
+                      icon: Icon(
+                        _secured ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.black38,
+                      ),
                     ),
                   ),
                   autofocus: false,
@@ -113,16 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       return ElevatedButton(
                         onPressed: () async {
                           if (_loginFormKey.currentState!.validate()) {
-                            setState(() {
-                              _isLoading = true;
-                            });
                             await authCtr.login(
                               email: _email,
                               password: _password,
                             );
-                            setState(() {
-                              _isLoading = false;
-                            });
                             if (authCtr.errorMsg.string.isEmpty) {
                               Get.snackbar('Login', 'Success');
                               if (!mounted) return;

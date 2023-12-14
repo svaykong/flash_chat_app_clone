@@ -23,14 +23,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _email = '';
   String _password = '';
   bool _secured = true;
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
+        inAsyncCall: _authController.isLoading.value,
         child: Form(
           key: _registerFormKey,
           child: Padding(
@@ -110,16 +109,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return ElevatedButton(
                         onPressed: () async {
                           if (_registerFormKey.currentState!.validate()) {
-                            setState(() {
-                              _isLoading = true;
-                            });
                             await authCtr.register(
                               email: _email,
                               password: _password,
                             );
-                            setState(() {
-                              _isLoading = false;
-                            });
                             if (authCtr.errorMsg.string.isEmpty) {
                               Get.snackbar('Register', 'Success');
                               if (!mounted) return;
