@@ -5,14 +5,12 @@ import '../utils/logger.dart';
 
 class FirestoreController extends GetxController {
   late final FirebaseFirestore _firestore;
-  RxString updateMessage = ''.obs;
-  RxString messageID = ''.obs;
-  RxBool isUpdate = false.obs;
+  RxString updateMessage = RxString('');
+  RxString messageID = RxString('');
+  RxBool isUpdate = RxBool(false);
 
-  // Loading (checking status)
-  RxBool _isLoading = false.obs;
-
-  RxBool get isLoading => _isLoading;
+  Rx<bool> _isLoading = Rx(false);
+  Rx<bool> get isLoading => _isLoading;
 
   @override
   void onInit() {
@@ -32,7 +30,7 @@ class FirestoreController extends GetxController {
     } catch (e) {
       'sendMessage err: $e'.log();
     } finally {
-      update();
+      'sendMessage finally'.log();
     }
   }
 
@@ -48,15 +46,15 @@ class FirestoreController extends GetxController {
   }
 
   void clickMessage({required String msg, required String msgID}) async {
-    updateMessage = msg.obs;
-    messageID = msgID.obs;
-    isUpdate = true.obs;
+    updateMessage(msg);
+    messageID(msgID);
+    isUpdate(true);
     update();
   }
 
   Future<void> editMessage({required String msgID, required String updatedMsg}) async {
     try {
-      _updateLoading(true);
+      _isLoading(true);
       await Future.delayed(const Duration(seconds: 2), () {});
       'updatedMsg: $updatedMsg'.log();
       await _firestore.collection('messages').doc(msgID).update({
@@ -65,7 +63,7 @@ class FirestoreController extends GetxController {
     } catch (e) {
       'editMessage err: $e'.log();
     } finally {
-      _updateLoading(false);
+      _isLoading(false);
     }
   }
 
@@ -76,19 +74,14 @@ class FirestoreController extends GetxController {
     } catch (e) {
       'deleteMessage err: $e'.log();
     } finally {
-      update();
+      'deleteMessage finally'.log();
     }
   }
 
   void clearUpdateMessage() {
-    updateMessage = ''.obs;
-    messageID = ''.obs;
-    isUpdate = false.obs;
-    update();
-  }
-
-  void _updateLoading(bool currentStatus) {
-    _isLoading = currentStatus.obs;
+    updateMessage('');
+    messageID('');
+    isUpdate(false);
     update();
   }
 }

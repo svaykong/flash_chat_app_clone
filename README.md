@@ -13,3 +13,18 @@
 # deploy firebase firestore rules,... 
 firebase deploy --only firestore
 '''
+
+# Example Getx
+https://code.pieces.app/blog/flutter-getx-fetching-data-from-opensea-api
+
+# Medium example
+https://medium.com/@sonawanedipak111/flutter-using-getx-state-management-e420428d8d78
+
+# Firebase emailAndLinkSignIn
+https://medium.com/firebase-developers/dive-into-firebase-auth-on-flutter-email-and-link-sign-in-e51603eb08f8
+
+# Firebase discussion
+https://groups.google.com/g/firebase-talk/c/9q6jQKtZyEg
+
+# Firebase auth
+https://firebase.flutter.dev/docs/auth/email-link-auth/

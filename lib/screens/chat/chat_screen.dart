@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:modal_progress_hud_alt/modal_progress_hud_alt.dart';
 
 import '../../controllers/firestore_controller.dart';
 import '../../controllers/auth_controller.dart';
@@ -11,7 +10,7 @@ import '../welcome_screen.dart';
 import 'message_stream.dart';
 
 class ChatScreen extends StatefulWidget {
-  static const id = 'chat_screen';
+  static const id = '/chat_screen';
 
   const ChatScreen({super.key});
 
@@ -59,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Get.snackbar('Logout', 'success');
                 }
                 if (!mounted) return;
-                Navigator.of(context).pushNamedAndRemoveUntil(WelcomeScreen.id, (route) => false);
+                Get.offNamedUntil(WelcomeScreen.id, (route) => false);
               }),
         ],
         title: const Text(
@@ -70,9 +69,8 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         backgroundColor: Colors.blueGrey[800],
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: _authController.isLoading.value ? _authController.isLoading.value : _firestoreController.isLoading.value,
-        child: SafeArea(
+      body: SafeArea(
+        child: Center(
           child: _loggedInUser == null
               ? const Center(
                   child: Text("Could not verify user"),

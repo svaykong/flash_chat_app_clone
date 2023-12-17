@@ -16,12 +16,12 @@ class RootApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: WelcomeScreen.id,
-      routes: {
-        WelcomeScreen.id: (_) => const WelcomeScreen(),
-        LoginScreen.id: (_) => const LoginScreen(),
-        RegisterScreen.id: (_) => const RegisterScreen(),
-        ChatScreen.id: (_) => const ChatScreen(),
-      },
+      getPages: [
+        GetPage(name: WelcomeScreen.id, page: () => const WelcomeScreen()),
+        GetPage(name: LoginScreen.id, page: () => const LoginScreen()),
+        GetPage(name: RegisterScreen.id, page: () => const RegisterScreen()),
+        GetPage(name: ChatScreen.id, page: () => const ChatScreen()),
+      ],
       debugShowCheckedModeBanner: false,
     );
   }
