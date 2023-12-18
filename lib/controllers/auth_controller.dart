@@ -13,9 +13,11 @@ class AuthController extends GetxController {
   final RxString errorMsg = ''.obs;
 
   final RxBool _isLoading = false.obs;
+
   RxBool get isLoading => _isLoading;
 
   final RxString _token = ''.obs;
+
   String get token => _token.value;
 
   RxBool isLogged = RxBool(false);
@@ -28,17 +30,18 @@ class AuthController extends GetxController {
     _firebaseAuth = FirebaseAuth.instance;
     _prefs = Get.find<SharedPreferences>();
     _authPrefs = AuthPrefsController(_prefs);
+
+    /* not applied
     final localToken = _authPrefs.getToken(AuthPrefsController.tokenKey);
     await _checkLocalToken(localToken);
     ever(isLogged, _firstRoute);
+    */
   }
 
   Future<void> _checkLocalToken(String? localToken) async {
     '_checkLocalToken called...'.log();
     try {
       if (localToken != null) {
-        // final emailAuthProvider = EmailAuthProvider.credential(email: email, password: password);
-        // await _firebaseAuth.signInWithCredential(emailAuthProvider);
         var userCredential = await _firebaseAuth.signInWithCustomToken(localToken);
         'userCredential: $userCredential'.log();
         // if (userCredential.user != null) {
@@ -87,14 +90,18 @@ class AuthController extends GetxController {
       await Future.delayed(const Duration(seconds: 1), () {});
 
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      if (userCredential.user == null) {
+        errorMsg("Unknown firebase user");
+      }
+      /*
       final token = await userCredential.user?.getIdToken(/* forceRefresh */ true);
-
       if (token == null) {
         errorMsg('token is null');
         return;
       }
       _token(token);
       _authPrefs.setToken(_token.value);
+       */
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         errorMsg('No user found for that email.');
@@ -113,7 +120,7 @@ class AuthController extends GetxController {
       _isLoading(true);
       await Future.delayed(const Duration(seconds: 1), () {});
       await _firebaseAuth.signOut();
-      await _authPrefs.removeToken();
+      //await _authPrefs.removeToken();
       errorMsg('');
     } catch (e) {
       errorMsg(e.toString());

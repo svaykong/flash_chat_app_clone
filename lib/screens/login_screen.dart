@@ -118,15 +118,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           email: _email,
                           password: _password,
                         );
-                        /*
                         if (_authController.errorMsg.string.isEmpty) {
                           Get.snackbar('Login', 'Success');
                           if (!mounted) return;
-                          Get.offNamed(ChatScreen.id);
+                          Get.offAllNamed(ChatScreen.id);
                         } else {
                           Get.snackbar('Login exception', _authController.errorMsg.string);
                         }
-                        */
                       }
                     },
                     style: ElevatedButton.styleFrom(
